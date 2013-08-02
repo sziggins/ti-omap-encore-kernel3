@@ -1,3 +1,44 @@
+########################################################################### ###
+#@Copyright     Copyright (c) Imagination Technologies Ltd. All Rights Reserved
+#@License       Dual MIT/GPLv2
+# 
+# The contents of this file are subject to the MIT license as set out below.
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# Alternatively, the contents of this file may be used under the terms of
+# the GNU General Public License Version 2 ("GPL") in which case the provisions
+# of GPL are applicable instead of those above.
+# 
+# If you wish to allow use of your version of this file only under the terms of
+# GPL, and not to allow others to use your version of this file under the terms
+# of the MIT license, indicate your decision by deleting the provisions above
+# and replace them with the notice and other provisions required by GPL as set
+# out in the file called "GPL-COPYING" included in this distribution. If you do
+# not delete the provisions above, a recipient may use your version of this file
+# under the terms of either the MIT license or GPL.
+# 
+# This License is also included in this distribution in the file called
+# "MIT-COPYING".
+# 
+# EXCEPT AS OTHERWISE STATED IN A NEGOTIATED AGREEMENT: (A) THE SOFTWARE IS
+# PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+# BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+# PURPOSE AND NONINFRINGEMENT; AND (B) IN NO EVENT SHALL THE AUTHORS OR
+# COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+# IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+# CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+#   
+### ###########################################################################
+
 ccflags-y = -DLINUX -D__linux__ -DANDROID -DPVR_BUILD_DIR="\"omap4430_android\""
 ccflags-$(CONFIG_PVR_SGXCORE_540) += -Idrivers/gpu/pvr -Idrivers/gpu/pvr/omap4 -Idrivers/video/omap2
 ccflags-$(CONFIG_PVR_SGXCORE_530) += -Idrivers/gpu/pvr -Idrivers/gpu/pvr/omap3 -Idrivers/video/omap2
@@ -63,7 +104,7 @@ ccflags-$(CONFIG_PVR_DUMP_MK_TRACE) += -DPVRSRV_DUMP_MK_TRACE
 ccflags-$(CONFIG_PVR_PDUMP) += \
 	-DPDUMP -DSUPPORT_DBGDRV_EVENT_OBJECTS -DSUPPORT_PDUMP_MULTI_PROCESS
 
-pvrsrvkm-y := \
+pvrsrvkm-y += \
 	osfunc.o \
 	mutils.o \
 	mmap.o \
@@ -81,20 +122,21 @@ pvrsrvkm-y := \
 	deviceclass.o \
 	handle.o \
 	hash.o \
+	lists.o \
+	mem.o \
+	mem_debug.o \
 	metrics.o \
+	osfunc_common.o \
+	pdump_common.o \
+	perproc.o \
+	power.o \
 	pvrsrv.o \
 	queue.o \
 	ra.o \
+	refcount.o \
 	resman.o \
-	power.o \
-	mem.o \
-	pdump_common.o \
 	bridged_support.o \
 	bridged_pvr_bridge.o \
-	perproc.o \
-	lists.o \
-	refcount.o \
-	sysfs.o \
 	sgx/bridged_sgx_bridge.o \
 	sgx/sgxinit.o \
 	sgx/sgxpower.o \
@@ -105,11 +147,9 @@ pvrsrvkm-y := \
 	sgx/mmu.o \
 	sgx/pb.o
 
-pvrsrvkm-$(CONFIG_PVR_SGXCORE_530) += omap3/sysconfig.o
-pvrsrvkm-$(CONFIG_PVR_SGXCORE_530) += omap3/sysutils.o
-
-pvrsrvkm-$(CONFIG_PVR_SGXCORE_540) += omap4/sysconfig.o
-pvrsrvkm-$(CONFIG_PVR_SGXCORE_540) += omap4/sysutils.o
+pvrsrvkm-$(CONFIG_PVR_SGXCORE_530) += \
+	omap3/sysconfig.o \
+	omap3/sysutils.o
 
 pvrsrvkm-$(CONFIG_ION_OMAP) += ion.o
 
@@ -119,5 +159,3 @@ omaplfb-y := \
 
 obj-$(CONFIG_PVR_SGX) += pvrsrvkm.o
 obj-$(CONFIG_PVR_SGX) += omaplfb.o
-# no Makefile in dbgdrv
-#obj-$(CONFIG_PVR_PDUMP) += dbgdrv/
